@@ -62,11 +62,15 @@ class Sprite{
         virtual void update();
         void hide();
         void show();
-        void addForce();
+        void addForce(std::string, int);
         void checkBounds();
         bool collidesWith(Sprite*);
         int distanceTo(Sprite*);
         int angleTo(Sprite *);
+        void setDeltaXPosition(int);
+        void setDeltaYPosition(int);
+        void setDeltaXVelocity(int);
+        void setDeltaYVelocity(int);
 
 }; // end class declariation 
 

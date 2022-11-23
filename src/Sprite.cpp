@@ -133,6 +133,16 @@ void Sprite::setDeltaPosition(int dx, int dy){
 } // end setDeltaPosition
 
 
+void Sprite::setDeltaXPosition(int dx){
+    this->deltaPosition_->at("dx") = dx;
+} // end setDeltaXPosition
+
+
+void Sprite::setDeltaYPosition(int dy){
+    this->deltaPosition_->at("dy") = dy;
+} // end setDeltaYPosition
+
+
 std::unordered_map<std::string, int>* Sprite::getDeltaVelocity(void){
     return (this->deltaVelocity_);
 } // end getDeltaVelocity
@@ -142,6 +152,16 @@ void Sprite::setDeltaVelocity(int ddx, int ddy){
     this->deltaVelocity_->at("ddx") = ddx;
     this->deltaVelocity_->at("ddy") = ddy;
 } // end setDeltaVelocity
+
+
+void Sprite::setDeltaXVelocity(int ddx){
+    this->deltaVelocity_->at("ddx") = ddx;
+} // end setDeltaXPosition
+
+
+void Sprite::setDeltaYVelocity(int ddy){
+    this->deltaVelocity_->at("ddy") = ddy;
+} // end setDeltaYPosition
 
 
 Scene* Sprite::getScene(void){
@@ -170,12 +190,13 @@ void Sprite::draw(){
     SDL_RenderClear(getScene()->getRenderer());
     SDL_RenderCopy(getScene()->getRenderer(), texture, &getImage()->clip_rect, this->rect_); //this line contains potential for using a sprite sheet
     SDL_RenderPresent(getScene()->getRenderer());
+    SDL_DestroyTexture(texture);
 
 } // end draw
 
 
 void Sprite::update(){
-
+    setPosition(getPosition()->at("xPos") + getDeltaPosition()->at("dx"), getPosition()->at("yPos") + getDeltaPosition()->at("dy"));
 } // end update
 
 
@@ -189,8 +210,19 @@ void Sprite::show(){
 } // end show
 
 
-void Sprite::addForce(){
-
+void Sprite::addForce(std::string direction, int magnitude){
+    if(direction == "right"){
+        setDeltaXPosition(magnitude);
+    }
+    if(direction == "left"){
+        setDeltaXPosition(magnitude * -1);
+    }
+    if(direction == "up"){
+        setDeltaYPosition(magnitude * -1);
+    }
+    if(direction == "down"){
+        setDeltaYPosition(magnitude);
+    }
 } // end addForce
 
 
