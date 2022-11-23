@@ -81,6 +81,8 @@ void Sprite::setSize(int width, int height){
     this->size_->at("height") = height;
     this->imgRect_->w = this->size_->at("width");
     this->imgRect_->h = this->size_->at("height");
+    this->collisionRect_->w = this->size_->at("width");
+    this->collisionRect_->h = this->size_->at("height");
 
 } // end setSize
 
@@ -95,6 +97,8 @@ void Sprite::setPosition(int xPos, int yPos){
     this->position_->at("yPos") = yPos;
     this->imgRect_->x = this->position_->at("xPos");
     this->imgRect_->y = this->position_->at("yPos");
+    this->collisionRect_->x = this->position_->at("xPos");
+    this->collisionRect_->y = this->position_->at("yPos");
 } // end setPosition
 
 
@@ -219,7 +223,11 @@ void Sprite::draw(){
 
 
 void Sprite::update(){ //TODO: make this defined in the subclass of Sprite instead of here as this is technically a virtual function
-    setPosition(getPosition()->at("xPos") + getDeltaPosition()->at("dx"), getPosition()->at("yPos") + getDeltaPosition()->at("dy"));
+    int newXPos = getPosition()->at("xPos") + getDeltaPosition()->at("dx");
+    int newYPos = getPosition()->at("yPos") + getDeltaPosition()->at("dy");
+    setPosition(newXPos, newYPos);
+    getCollisionRect()->x = newXPos;
+    getCollisionRect()->y = newYPos;
 } // end update
 
 
@@ -241,10 +249,10 @@ void Sprite::addForce(std::string direction, int magnitude){
         setDeltaXPosition(magnitude * -1);
     }
     if(direction == "up"){
-        setDeltaYPosition(magnitude * -1);
+        setDeltaYPosition(getDeltaPosition()->at("dy") + magnitude * -1);
     }
     if(direction == "down"){
-        setDeltaYPosition(magnitude);
+        setDeltaYPosition(getDeltaPosition()->at("dy") + magnitude);
     }
 } // end addForce
 
@@ -275,25 +283,48 @@ bool Sprite::collidesWith(Sprite* otherSprite){
     rightB = b->x + b->w;
     topB = b->y;
     bottomB = b->y + b->h;
-    return 0;
 
     //If any of the sides from A are outside of B
-    if( bottomA <= topB ){
+    if( bottomA < topB ){
         return false;
     } //end if
-    if( topA >= bottomB ){
+    if( topA > bottomB ){
         return false;
     } // end if
-    if( rightA <= leftB ){
+    if( rightA < leftB ){
         return false;
     } // end if
-    if( leftA >= rightB ){
+    if( leftA > rightB ){
         return false;
     } //end if
 
     //If none of the sides from A are outside B
     return true;
 } // end collidesWith
+
+
+bool Sprite::touchingFloor(Sprite* floor){
+    SDL_Rect *a = this->getCollisionRect(); // rectangle A
+    SDL_Rect *b = floor->getCollisionRect(); // rectangle B
+
+    //The sides of the rectangles
+    int topB;
+    int bottomA;
+
+    //Calculate the bottom of rect A
+    bottomA = a->y + a->h;
+
+    //Calculate the top of rect B
+    topB = b->y;
+
+    //If the bottom of A is above B
+    if( bottomA < topB ){
+        return false;
+    } //end if
+
+    //If A touches the floor
+    return true;
+} //end touchingFloor
 
 
 int Sprite::distanceTo(Sprite*){

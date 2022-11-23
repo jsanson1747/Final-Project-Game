@@ -30,11 +30,13 @@ void startMainLoop(Scene* scene, Sprite* sprite, Sprite* floor){
                             sprite->addForce("right", 10);
                             break;
                         case SDLK_UP:
-                            sprite->addForce("up", 10);
+                            sprite->addForce("up", 15);
                             break;
                         case SDLK_DOWN:
-                            sprite->addForce("down", 10);
-                            break;
+                            if(sprite->collidesWith(floor) != true){
+                                sprite->addForce("down", 10);
+                                break;
+                            }
                         default:
                             break;
                     }
@@ -74,18 +76,23 @@ void startMainLoop(Scene* scene, Sprite* sprite, Sprite* floor){
                     break;
             }
         }
-    
+
         //////////////////////////////
         // Add update handling here //
         //////////////////////////////
-
         sprite->update();
         floor->update();
         scene->clear();
         sprite->draw();
         floor->draw();
         scene->refresh();
-        std::cout << "\r" << "DEBUG: " << sprite->getPosition()->at("xPos") << " : " << sprite->getPosition()->at("yPos") << " | " << sprite->getDeltaPosition()->at("dx") << " : " << sprite->getDeltaPosition()->at("dy") << " --> Err: [" << SDL_GetErrorMsg << "]                      ";
+        if(sprite->collidesWith(floor) == true){
+            sprite->setDeltaYPosition(0);
+        }
+        if(sprite->collidesWith(floor) == false){
+            sprite->addForce("down", 1);
+        }
+        std::cout << "\r" << "DEBUG: " << sprite->getPosition()->at("xPos") << " : " << sprite->getPosition()->at("yPos") << " | " << sprite->getDeltaPosition()->at("dx") << " : " << sprite->getDeltaPosition()->at("dy") << " --> {" << sprite->touchingFloor(floor) << "} --> Err: [" << SDL_GetErrorMsg << "]                      ";
 
         int delta = SDL_GetTicks() - startLoop;
         if(delta < desiredDelta){
@@ -105,9 +112,9 @@ int main(int argv, char** args){
     sprite->setSize(100, 100);
     sprite->draw();
 
-    Sprite *floor = new Sprite(scene, "Baby Yoda.png");
-    floor->setPosition(200, 200);
-    floor->setSize(200, 20);
+    Sprite* floor = new Sprite(scene, "Baby Yoda.png");
+    floor->setPosition(100, 300);
+    floor->setSize(600, 20);
     floor->draw();
 
     startMainLoop(scene, sprite, floor);

@@ -70,6 +70,7 @@ class Sprite{
         void addForce(std::string, int);
         void checkBounds();
         bool collidesWith(Sprite*);
+        bool touchingFloor(Sprite* otherSprite);
         int distanceTo(Sprite*);
         int angleTo(Sprite *);
         void setDeltaXPosition(int);
