@@ -62,6 +62,7 @@ class Scene{
         void end();
         void pause();
         void clear();
+        void refresh();
         void hideCursor();
         void showCursor();
         void getMousePos();

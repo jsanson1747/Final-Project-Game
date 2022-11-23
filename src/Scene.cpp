@@ -199,6 +199,11 @@ void Scene::clear(){
 } // end clear
 
 
+void Scene::refresh(){
+    SDL_RenderPresent(getRenderer());
+}
+
+
 void Scene::hideCursor(){
 
 } // end hideCursor

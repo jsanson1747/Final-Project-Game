@@ -212,10 +212,7 @@ void Sprite::setCollisionRect(SDL_Rect* rect){
 
 void Sprite::draw(){
     SDL_Texture* texture = SDL_CreateTextureFromSurface(getScene()->getRenderer(), getImage());
-
-    SDL_RenderClear(getScene()->getRenderer());
     SDL_RenderCopy(getScene()->getRenderer(), texture, &getImage()->clip_rect, getImgRect()); //this line contains potential for using a sprite sheet
-    SDL_RenderPresent(getScene()->getRenderer());
     SDL_DestroyTexture(texture);
 
 } // end draw
@@ -257,9 +254,45 @@ void Sprite::checkBounds(){
 } // end checkBounds
 
 
-bool Sprite::collidesWith(Sprite*){
+bool Sprite::collidesWith(Sprite* otherSprite){
+    SDL_Rect *a = this->getCollisionRect(); // rectangle A
+    SDL_Rect *b = otherSprite->getCollisionRect(); // rectangle B
 
+    //The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
+
+    //Calculate the sides of rect A
+    leftA = a->x;
+    rightA = a->x + a->w;
+    topA = a->y;
+    bottomA = a->y + a->h;
+
+    //Calculate the sides of rect B
+    leftB = b->x;
+    rightB = b->x + b->w;
+    topB = b->y;
+    bottomB = b->y + b->h;
     return 0;
+
+    //If any of the sides from A are outside of B
+    if( bottomA <= topB ){
+        return false;
+    } //end if
+    if( topA >= bottomB ){
+        return false;
+    } // end if
+    if( rightA <= leftB ){
+        return false;
+    } // end if
+    if( leftA >= rightB ){
+        return false;
+    } //end if
+
+    //If none of the sides from A are outside B
+    return true;
 } // end collidesWith
 
 

@@ -8,7 +8,7 @@
  *  This is the main loop for the game. Add event handling here
  *  \param Scene* scene
  */
-void startMainLoop(Scene* scene, Sprite* sprite){
+void startMainLoop(Scene* scene, Sprite* sprite, Sprite* floor){
     // start the main game loop
     SDL_Event *event = scene->getEvent();
     bool isRunning = true;
@@ -80,8 +80,11 @@ void startMainLoop(Scene* scene, Sprite* sprite){
         //////////////////////////////
 
         sprite->update();
+        floor->update();
         scene->clear();
         sprite->draw();
+        floor->draw();
+        scene->refresh();
         std::cout << "\r" << "DEBUG: " << sprite->getPosition()->at("xPos") << " : " << sprite->getPosition()->at("yPos") << " | " << sprite->getDeltaPosition()->at("dx") << " : " << sprite->getDeltaPosition()->at("dy") << " --> Err: [" << SDL_GetErrorMsg << "]                      ";
 
         int delta = SDL_GetTicks() - startLoop;
@@ -97,13 +100,17 @@ int main(int argv, char** args){
     scene->setGameName("Awesome Game");
     scene->initializeGraphics();
 
-    const char* image_path = "pixil-frame-0.png";
-    Sprite* sprite = new Sprite(scene, image_path);    
+    Sprite* sprite = new Sprite(scene, "pixil-frame-0.png");    
     sprite->setPosition(50, 50);
     sprite->setSize(100, 100);
     sprite->draw();
 
-    startMainLoop(scene, sprite);
+    Sprite *floor = new Sprite(scene, "Baby Yoda.png");
+    floor->setPosition(200, 200);
+    floor->setSize(200, 20);
+    floor->draw();
+
+    startMainLoop(scene, sprite, floor);
     scene->quit(); //when mainLoop terminates quit the game
     return(0);
 }
