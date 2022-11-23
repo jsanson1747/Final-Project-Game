@@ -1,0 +1,34 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "SDL2",
+            "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "args": [
+                "-g",
+                "src\\*.cpp",
+                "-o",
+                "build\\engineTest.exe",
+                "-IS:/School/IUPUI Senior Year/First Semester/Introduction to 3D Game Graphics/Game_Engine/SDL2-2.24.0/x86_64-w64-mingw32/include",
+                "-LS:/School/IUPUI Senior Year/First Semester/Introduction to 3D Game Graphics/Game_Engine/SDL2-2.24.0/x86_64-w64-mingw32/lib",
+                "-IS:/School/IUPUI Senior Year/First Semester/Introduction to 3D Game Graphics/Game_Engine/SDL_Image",
+                "-LS:/School/IUPUI Senior Year/First Semester/Introduction to 3D Game Graphics/Game_Engine/build",
+                "-lmingw32",
+                "-lSDL2main",
+                "-lSDL2",
+                "-lSDL2_image"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
