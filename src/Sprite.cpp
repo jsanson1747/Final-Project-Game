@@ -12,19 +12,20 @@ Sprite::Sprite(Scene* scene, const char* file){
     this->position_ = new std::unordered_map<std::string, int>;
     this->deltaPosition_ = new std::unordered_map<std::string, int>;
     this->deltaVelocity_ = new std::unordered_map<std::string, int>;
-    this->rect_ = new SDL_Rect();
+    this->imgRect_ = new SDL_Rect();
+    this->collisionRect_ = new SDL_Rect();
 
     // initialize map and set default size;
     this->size_->insert({"width", getImage()->w});
     this->size_->insert({"height", getImage()->h});
-    rect_->w = this->size_->at("width");
-    rect_->h = this->size_->at("height");
+    imgRect_->w = this->size_->at("width");
+    imgRect_->h = this->size_->at("height");
 
     // initialize map and set default position;
     this->position_->insert({"xPos", 0});
     this->position_->insert({"yPos", 0});
-    rect_->x = this->position_->at("xPos");
-    rect_->y = this->position_->at("yPos");
+    imgRect_->x = this->position_->at("xPos");
+    imgRect_->y = this->position_->at("yPos");
 
     // initialize map and set default deltaPosition;
     this->deltaPosition_->insert({"dx", 0});
@@ -34,6 +35,11 @@ Sprite::Sprite(Scene* scene, const char* file){
     this->deltaVelocity_->insert({"ddx", 0});
     this->deltaVelocity_->insert({"ddy", 0});
 
+    // initialize collision box
+    this->collisionRect_->x = this->position_->at("xPos");
+    this->collisionRect_->y = this->position_->at("yPos");
+    this->collisionRect_->w = this->size_->at("width");
+    this->collisionRect_->h = this->size_->at("height");
 
 } // end default constructor
 
@@ -73,8 +79,8 @@ std::unordered_map<std::string, int>* Sprite::getSize(void){
 void Sprite::setSize(int width, int height){
     this->size_->at("width") = width;
     this->size_->at("height") = height;
-    this->rect_->w = this->size_->at("width");
-    this->rect_->h = this->size_->at("height");
+    this->imgRect_->w = this->size_->at("width");
+    this->imgRect_->h = this->size_->at("height");
 
 } // end setSize
 
@@ -87,8 +93,8 @@ std::unordered_map<std::string, int>* Sprite::getPosition(void){
 void Sprite::setPosition(int xPos, int yPos){
     this->position_->at("xPos") = xPos;
     this->position_->at("yPos") = yPos;
-    this->rect_->x = this->position_->at("xPos");
-    this->rect_->y = this->position_->at("yPos");
+    this->imgRect_->x = this->position_->at("xPos");
+    this->imgRect_->y = this->position_->at("yPos");
 } // end setPosition
 
 
@@ -184,18 +190,38 @@ void Sprite::setBoundAction(std::string boundAction){
 } // end setBoundAction
 
 
+SDL_Rect*  Sprite::getImgRect(void){
+    return (this->imgRect_);
+} // end getImgRect
+
+
+void Sprite::setImgRect(SDL_Rect* rect){
+    this->imgRect_ = rect;
+} // end setImgRect
+
+
+SDL_Rect*  Sprite::getCollisionRect(void){
+    return (this->collisionRect_);
+} // end getCollisionRect
+
+
+void Sprite::setCollisionRect(SDL_Rect* rect){
+    this->collisionRect_ = rect;
+} // end setCollisionRect
+
+
 void Sprite::draw(){
     SDL_Texture* texture = SDL_CreateTextureFromSurface(getScene()->getRenderer(), getImage());
 
     SDL_RenderClear(getScene()->getRenderer());
-    SDL_RenderCopy(getScene()->getRenderer(), texture, &getImage()->clip_rect, this->rect_); //this line contains potential for using a sprite sheet
+    SDL_RenderCopy(getScene()->getRenderer(), texture, &getImage()->clip_rect, getImgRect()); //this line contains potential for using a sprite sheet
     SDL_RenderPresent(getScene()->getRenderer());
     SDL_DestroyTexture(texture);
 
 } // end draw
 
 
-void Sprite::update(){
+void Sprite::update(){ //TODO: make this defined in the subclass of Sprite instead of here as this is technically a virtual function
     setPosition(getPosition()->at("xPos") + getDeltaPosition()->at("dx"), getPosition()->at("yPos") + getDeltaPosition()->at("dy"));
 } // end update
 
@@ -232,6 +258,7 @@ void Sprite::checkBounds(){
 
 
 bool Sprite::collidesWith(Sprite*){
+
     return 0;
 } // end collidesWith
 

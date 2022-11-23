@@ -21,7 +21,8 @@ class Sprite{
         std::unordered_map<std::string, int>* deltaVelocity_; // change in velocity (acceleration)
         Scene* scene_;
         std::string boundAction_; // what the sprite does when it detects a boundry
-        SDL_Rect *rect_;
+        SDL_Rect* imgRect_;
+        SDL_Rect *collisionRect_;
 
         //internal helper method
         void vectorProject();
@@ -56,6 +57,10 @@ class Sprite{
         void setScene(Scene*);
         std::string getBoundAction(void);
         void setBoundAction(std::string);
+        SDL_Rect *getImgRect(void);
+        void setImgRect(SDL_Rect *);
+        SDL_Rect *getCollisionRect(void);
+        void setCollisionRect(SDL_Rect *);
 
         //methods
         void draw();

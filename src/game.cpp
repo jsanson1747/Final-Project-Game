@@ -80,6 +80,7 @@ void startMainLoop(Scene* scene, Sprite* sprite){
         //////////////////////////////
 
         sprite->update();
+        scene->clear();
         sprite->draw();
         std::cout << "\r" << "DEBUG: " << sprite->getPosition()->at("xPos") << " : " << sprite->getPosition()->at("yPos") << " | " << sprite->getDeltaPosition()->at("dx") << " : " << sprite->getDeltaPosition()->at("dy") << " --> Err: [" << SDL_GetErrorMsg << "]                      ";
 
@@ -92,13 +93,14 @@ void startMainLoop(Scene* scene, Sprite* sprite){
 
 int main(int argv, char** args){
     Scene* scene = new Scene();
+    scene->setBackgroundColor(200, 200, 200);
     scene->setGameName("Awesome Game");
     scene->initializeGraphics();
 
-    const char* image_path = "Baby Yoda.png";
+    const char* image_path = "pixil-frame-0.png";
     Sprite* sprite = new Sprite(scene, image_path);    
     sprite->setPosition(50, 50);
-    sprite->setSize(75, 75);
+    sprite->setSize(100, 100);
     sprite->draw();
 
     startMainLoop(scene, sprite);
