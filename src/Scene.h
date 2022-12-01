@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <string>
 #include <list>
+#include <vector>
 #include "SDL_image.h"
 
 class Sprite;
@@ -20,7 +21,7 @@ class Scene{
         std::unordered_map<std::string, int>* backgroundColor_;
         std::unordered_map<std::string, int>* size_;
         //std::unordered_map<std::string, int>* position_;
-        std::list<Sprite*>* sprites_;
+        std::vector<Sprite*>* sprites_;
         int frameRate_;
         std::list<bool>* keyStates_;
         bool mouseButtonState_;
@@ -48,8 +49,8 @@ class Scene{
         void setSize(int height, int width);
         //std::unordered_map<std::string, int>* getPosition(void);
         //void setPosition(int xPos, int yPos);
-        std::list<Sprite*>* getSprites(void);
-        void setSprites(std::list<Sprite*>*);
+        std::vector<Sprite*>* getSprites(void);
+        void setSprites(std::vector<Sprite*>*);
         int getFrameRate(void);
         void setFrameRate(int);
         std::list<bool>* getKeyStates(void);
@@ -58,6 +59,7 @@ class Scene{
 
         // Methods
         void initializeGraphics();
+        void addSprite(Sprite*);
         void start();
         void end();
         void pause();

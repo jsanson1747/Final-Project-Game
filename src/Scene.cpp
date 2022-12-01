@@ -7,12 +7,12 @@ Scene::Scene(){
     this->size_ = new std::unordered_map<std::string, int>;
     this->backgroundColor_ = new std::unordered_map<std::string, int>;
     //position_ = new std::unordered_map<std::string, int>;
-    this->sprites_ = new std::list<Sprite*>;
+    this->sprites_ = new std::vector<Sprite*>;
     this->keyStates_ = new std::list<bool>;
 
     //  initialize map and set default size;
-    this->size_->insert({"width", 500});
-    this->size_->insert({"height", 500});
+    this->size_->insert({"width", 800});
+    this->size_->insert({"height", 800});
     
     // initialize map and set default background color
     this->backgroundColor_->insert({"red", 255});
@@ -126,12 +126,12 @@ void Scene::setSize(int width, int height){
 //} // end setPosition
 
 
-std::list<Sprite*>* Scene::getSprites(void){
+std::vector<Sprite*>* Scene::getSprites(void){
     return (sprites_);
 } // getSprites
 
 
-void Scene::setSprites(std::list<Sprite*>* sprites){
+void Scene::setSprites(std::vector<Sprite*>* sprites){
     this->sprites_ = sprites;
 } // end setSprites
 
@@ -172,6 +172,10 @@ void Scene::initializeGraphics(void){
     setRenderer(renderer);
     setWindow(window);
 } // end initializeGraphics
+
+void Scene::addSprite(Sprite* sprite){
+    getSprites()->emplace_back(sprite);
+} // end addSprite
 
 void Scene::start(){
 

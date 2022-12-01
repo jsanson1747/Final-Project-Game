@@ -302,31 +302,6 @@ bool Sprite::collidesWith(Sprite* otherSprite){
     return true;
 } // end collidesWith
 
-
-bool Sprite::touchingFloor(Sprite* floor){
-    SDL_Rect *a = this->getCollisionRect(); // rectangle A
-    SDL_Rect *b = floor->getCollisionRect(); // rectangle B
-
-    //The sides of the rectangles
-    int topB;
-    int bottomA;
-
-    //Calculate the bottom of rect A
-    bottomA = a->y + a->h;
-
-    //Calculate the top of rect B
-    topB = b->y;
-
-    //If the bottom of A is above B
-    if( bottomA < topB ){
-        return false;
-    } //end if
-
-    //If A touches the floor
-    return true;
-} //end touchingFloor
-
-
 int Sprite::distanceTo(Sprite*){
     return 0;
 } // end distanceTo
