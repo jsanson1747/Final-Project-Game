@@ -14,7 +14,6 @@ class Sprite;
 
 class Scene{
     private:
-        SDL_Renderer* renderer_;
         SDL_Window* window_;
         SDL_Event* event_;
         char* gameName_;
@@ -29,6 +28,9 @@ class Scene{
         bool isShowing_;
 
     public:
+        // static member variable
+        static SDL_Renderer *renderer;
+
         // Constructors
         Scene();
         Scene(Scene*);
@@ -37,8 +39,6 @@ class Scene{
         ~Scene();
 
         // Getters and Setters
-        SDL_Renderer* getRenderer(void);
-        void setRenderer(SDL_Renderer* renderer);
         SDL_Window *getWindow();
         void setWindow(SDL_Window *);
         SDL_Event *getEvent();
@@ -75,6 +75,7 @@ class Scene{
         void hide();
         void show();
         void quit();
+        
 
 }; // end class declaration
 

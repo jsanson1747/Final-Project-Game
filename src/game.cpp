@@ -120,14 +120,14 @@ int main(int argv, char** args){
     scene->setGameName("Awesome Game");
     scene->initializeGraphics();
 
-    Sprite* player = new Player(scene, "pixil-frame-0.png");
+    Sprite* player = new Player(scene, "Sprite-Images/pixil-frame-0.png");
     player->setPosition(50, 50);
     player->setSize(100, 100);
-    player->setBoundAction("StopOnCollide");
+    player->setBoundAction("respawn");
     player->draw();
     scene->addSprite(player);
 
-    Sprite* floor = new Player(scene, "Baby Yoda.png");
+    Sprite* floor = new Player(scene, "Sprite-Images/Baby Yoda.png");
     floor->setPosition(0, 300);
     floor->setSize(800, 20);
     floor->draw();

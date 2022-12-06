@@ -232,8 +232,8 @@ void Sprite::setCollisionRect(SDL_Rect* rect){
 
 void Sprite::draw(){
     if(isShowing() == true){
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(getScene()->getRenderer(), getImage());
-        SDL_RenderCopy(getScene()->getRenderer(), texture, &getImage()->clip_rect, getImgRect()); //this line contains potential for using a sprite sheet
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(Scene::renderer, getImage());
+        SDL_RenderCopy(Scene::renderer, texture, &getImage()->clip_rect, getImgRect()); //this line contains potential for using a sprite sheet
         SDL_DestroyTexture(texture);
     } //end if
 
@@ -279,12 +279,6 @@ bool Sprite::inBounds(){
  */
 void Sprite::checkBounds(){
     if(isShowing() == true){
-        //if(getPosition()->at("xPos") >= getScene()->getSize()->at("width") || getPosition()->at("xPos") <= 0 || getPosition()->at("yPos") <= 0 || getPosition()->at("yPos") >= getScene()->getSize()->at("height")){ //if out of bounds...
-        //    if(getBoundAction() == "StopOnCollide"){
-        //        setDeltaXPosition(0);
-        //     } //end if
-        //} //end if
-
         SDL_Rect *a = this->getCollisionRect(); // rectangle A
         SDL_Rect *b = getScene()->getBoundsRect(); // rectangle B
 
@@ -310,7 +304,13 @@ void Sprite::checkBounds(){
         if(bottomA > bottomB || topA < topB || rightA > rightB || leftA < leftB){
             this->inBounds_ = false;
             if(getBoundAction() == "StopOnCollide"){
-                setDeltaXPosition(0);
+                setDeltaPosition(0, 0);
+            } //end if
+            if(getBoundAction() == "respawn"){
+                if(bottomA > bottomB){
+                    setPosition(50, 50);
+                    setDeltaPosition(0, 0);
+                } //end if
             } //end if
         } //end if
         else{

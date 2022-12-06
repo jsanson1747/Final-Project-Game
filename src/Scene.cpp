@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 
+SDL_Renderer *Scene::renderer = nullptr;
+
 Scene::Scene(){
     //initialize data structures
     this->size_ = new std::unordered_map<std::string, int>;
@@ -36,7 +38,6 @@ Scene::Scene(){
 
 
 Scene::Scene(Scene* scene){
-    scene->renderer_ = this->renderer_;
     scene->size_ = this->size_;
     //scene->position_ = this->position_;
     scene->sprites_ = this->sprites_;
@@ -55,16 +56,6 @@ Scene::~Scene(){
     delete event_;
 
 } // end deconstructor
-
-
-SDL_Renderer* Scene::getRenderer(void){
-    return(this->renderer_);
-} // end getRenderer
-
-
-void Scene::setRenderer(SDL_Renderer* renderer){
-    this->renderer_ = renderer;
-} // end renderer
 
 
 SDL_Window* Scene::getWindow(void){
@@ -181,7 +172,7 @@ void Scene::initializeGraphics(void){
     // initialize components
     SDL_Window* window = SDL_CreateWindow(getGameName(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size_->at("width"), size_->at("height"), 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    setRenderer(renderer);
+    Scene::renderer = renderer;
     setWindow(window);
 } // end initializeGraphics
 
@@ -210,13 +201,13 @@ void Scene::clear(){
     int blue = getBackgroundColor()->at("blue");
     int alpha = SDL_ALPHA_OPAQUE;
     // clear the canvas with the background color
-    SDL_SetRenderDrawColor(getRenderer(), red, green, blue, alpha);
-    SDL_RenderClear(getRenderer());
+    SDL_SetRenderDrawColor(Scene::renderer, red, green, blue, alpha);
+    SDL_RenderClear(Scene::renderer);
 } // end clear
 
 
 void Scene::refresh(){
-    SDL_RenderPresent(getRenderer());
+    SDL_RenderPresent(Scene::renderer);
 }
 
 
@@ -245,7 +236,7 @@ void Scene::show(){
 } // end show
 
 void Scene::quit(void){
-    SDL_DestroyRenderer(getRenderer());
+    SDL_DestroyRenderer(Scene::renderer);
     SDL_DestroyWindow(getWindow());
     SDL_Quit();
     IMG_Quit();
