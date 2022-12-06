@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Scene.h"
 #include "Sprite.h"
+#include "Player.h"
 
 /** 
  *  This is the main loop for the game. Add event handling here
@@ -88,8 +89,10 @@ void startMainLoop(Scene* scene, Sprite* floor){
         //////////////////////////////
         scene->clear();
         for(int index = 0; index < scene->getSprites()->size(); index++){
-            scene->getSprites()->at(index)->update();
-            scene->getSprites()->at(index)->draw();
+            if(scene->getSprites()->at(index)->isShowing() == true){
+                scene->getSprites()->at(index)->update();
+                scene->getSprites()->at(index)->draw();
+            }
         }
         floor->update();
         floor->draw();
@@ -100,15 +103,16 @@ void startMainLoop(Scene* scene, Sprite* floor){
         if(player->collidesWith(floor) == false){
             player->addForce("down", 1);
         }
-        
-        std::cout << "\r" << "DEBUG: " << player->getPosition()->at("xPos") << " : " << player->getPosition()->at("yPos") << " | " << player->getDeltaPosition()->at("dx") << " : " << player->getDeltaPosition()->at("dy") << " --> {" << player->collidesWith(floor) << "} --> Err: [" << SDL_GetErrorMsg << "] --- Num Sprites{" << scene->getSprites()->size() << "}                      ";
+         
+        std::cout << "\r" << "DEBUG: Player-State: " << player->getPosition()->at("xPos") << " : " << player->getPosition()->at("yPos") << " | " << player->getDeltaPosition()->at("dx") << " : " << player->getDeltaPosition()->at("dy") << " --> {" << player->collidesWith(floor) << "} --> Err: [" << SDL_GetErrorMsg << "] --- Num Sprites{" << scene->getSprites()->size() << "}                      ";
 
         int delta = SDL_GetTicks() - startLoop;
         if(delta < desiredDelta){
             SDL_Delay(desiredDelta - delta);
         } //end if
-    }        
+    } //end while 
 } //end mainLoop
+
 
 int main(int argv, char** args){
     Scene* scene = new Scene();
@@ -116,15 +120,16 @@ int main(int argv, char** args){
     scene->setGameName("Awesome Game");
     scene->initializeGraphics();
 
-    Sprite* player = new Sprite(scene, "pixil-frame-0.png");
+    Sprite* player = new Player(scene, "pixil-frame-0.png");
     player->setPosition(50, 50);
     player->setSize(100, 100);
+    player->setBoundAction("StopOnCollide");
     player->draw();
     scene->addSprite(player);
 
-    Sprite* floor = new Sprite(scene, "Baby Yoda.png");
-    floor->setPosition(100, 300);
-    floor->setSize(600, 20);
+    Sprite* floor = new Player(scene, "Baby Yoda.png");
+    floor->setPosition(0, 300);
+    floor->setSize(800, 20);
     floor->draw();
 
     startMainLoop(scene, floor);

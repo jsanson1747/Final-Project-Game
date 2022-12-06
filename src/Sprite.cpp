@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Sprite.h"
 
+
 Sprite::Sprite(Scene* scene, const char* file){
     setScene(scene);
     setImage(file);
@@ -41,10 +42,13 @@ Sprite::Sprite(Scene* scene, const char* file){
     this->collisionRect_->w = this->size_->at("width");
     this->collisionRect_->h = this->size_->at("height");
 
+    // show sprite by default
+    show();
+
 } // end default constructor
 
 Sprite::Sprite(Sprite* sprite){
-
+    //TODO
 } // end copy constructor
 
 Sprite::~Sprite(){
@@ -138,18 +142,24 @@ std::unordered_map<std::string, int>* Sprite::getDeltaPosition(void){
 
 
 void Sprite::setDeltaPosition(int dx, int dy){
-    this->deltaPosition_->at("dx") = dx;
-    this->deltaPosition_->at("dy") = dy;
+    if(isShowing() == true){
+        this->deltaPosition_->at("dx") = dx;
+        this->deltaPosition_->at("dy") = dy;
+    } //end if
 } // end setDeltaPosition
 
 
 void Sprite::setDeltaXPosition(int dx){
-    this->deltaPosition_->at("dx") = dx;
+    if(isShowing() == true){
+        this->deltaPosition_->at("dx") = dx;
+    } //end if
 } // end setDeltaXPosition
 
 
 void Sprite::setDeltaYPosition(int dy){
-    this->deltaPosition_->at("dy") = dy;
+    if(isShowing() == true){
+        this->deltaPosition_->at("dy") = dy;
+    } //end if
 } // end setDeltaYPosition
 
 
@@ -159,18 +169,24 @@ std::unordered_map<std::string, int>* Sprite::getDeltaVelocity(void){
 
 
 void Sprite::setDeltaVelocity(int ddx, int ddy){
-    this->deltaVelocity_->at("ddx") = ddx;
-    this->deltaVelocity_->at("ddy") = ddy;
+    if(isShowing() == true){
+        this->deltaVelocity_->at("ddx") = ddx;
+        this->deltaVelocity_->at("ddy") = ddy;
+    } //end if
 } // end setDeltaVelocity
 
 
 void Sprite::setDeltaXVelocity(int ddx){
-    this->deltaVelocity_->at("ddx") = ddx;
+    if(isShowing() == true){
+        this->deltaVelocity_->at("ddx") = ddx;
+    } //end if
 } // end setDeltaXPosition
 
 
 void Sprite::setDeltaYVelocity(int ddy){
-    this->deltaVelocity_->at("ddy") = ddy;
+    if(isShowing() == true){
+        this->deltaVelocity_->at("ddy") = ddy;
+    } //end if
 } // end setDeltaYPosition
 
 
@@ -215,91 +231,138 @@ void Sprite::setCollisionRect(SDL_Rect* rect){
 
 
 void Sprite::draw(){
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(getScene()->getRenderer(), getImage());
-    SDL_RenderCopy(getScene()->getRenderer(), texture, &getImage()->clip_rect, getImgRect()); //this line contains potential for using a sprite sheet
-    SDL_DestroyTexture(texture);
+    if(isShowing() == true){
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(getScene()->getRenderer(), getImage());
+        SDL_RenderCopy(getScene()->getRenderer(), texture, &getImage()->clip_rect, getImgRect()); //this line contains potential for using a sprite sheet
+        SDL_DestroyTexture(texture);
+    } //end if
 
 } // end draw
 
 
-void Sprite::update(){ //TODO: make this defined in the subclass of Sprite instead of here as this is technically a virtual function
-    int newXPos = getPosition()->at("xPos") + getDeltaPosition()->at("dx");
-    int newYPos = getPosition()->at("yPos") + getDeltaPosition()->at("dy");
-    setPosition(newXPos, newYPos);
-    getCollisionRect()->x = newXPos;
-    getCollisionRect()->y = newYPos;
-} // end update
-
-
 void Sprite::hide(){
-
+    this->isShowing_ = false;
 } // end hide
 
 
 void Sprite::show(){
-
+    this->isShowing_ = true;
 } // end show
 
+bool Sprite::isShowing(){
+    return (this->isShowing_);
+} //end isShowing
 
 void Sprite::addForce(std::string direction, int magnitude){
-    if(direction == "right"){
-        setDeltaXPosition(magnitude);
-    }
-    if(direction == "left"){
-        setDeltaXPosition(magnitude * -1);
-    }
-    if(direction == "up"){
-        setDeltaYPosition(getDeltaPosition()->at("dy") + magnitude * -1);
-    }
-    if(direction == "down"){
-        setDeltaYPosition(getDeltaPosition()->at("dy") + magnitude);
-    }
+    if(isShowing() == true){
+        if(direction == "right"){
+            setDeltaXPosition(magnitude);
+        } //end if
+        if(direction == "left"){
+            setDeltaXPosition(magnitude * -1);
+        } //end if
+        if(direction == "up"){
+            setDeltaYPosition(getDeltaPosition()->at("dy") + magnitude * -1);
+        } //end if
+        if(direction == "down"){
+            setDeltaYPosition(getDeltaPosition()->at("dy") + magnitude);
+        } //end if
+    } //end if
 } // end addForce
 
+bool Sprite::inBounds(){
+    return this->inBounds_;
+}
 
+/*
+ * calculates action upon edge collision based on what action has been set
+ */
 void Sprite::checkBounds(){
+    if(isShowing() == true){
+        //if(getPosition()->at("xPos") >= getScene()->getSize()->at("width") || getPosition()->at("xPos") <= 0 || getPosition()->at("yPos") <= 0 || getPosition()->at("yPos") >= getScene()->getSize()->at("height")){ //if out of bounds...
+        //    if(getBoundAction() == "StopOnCollide"){
+        //        setDeltaXPosition(0);
+        //     } //end if
+        //} //end if
 
+        SDL_Rect *a = this->getCollisionRect(); // rectangle A
+        SDL_Rect *b = getScene()->getBoundsRect(); // rectangle B
+
+        //The sides of the rectangles
+        int leftA, leftB;
+        int rightA, rightB;
+        int topA, topB;
+        int bottomA, bottomB;
+
+        //Calculate the sides of rect A
+        leftA = a->x;
+        rightA = a->x + a->w;
+        topA = a->y;
+        bottomA = a->y + a->h;
+
+        //Calculate the sides of rect B
+        leftB = b->x;
+        rightB = b->x + b->w;
+        topB = b->y;
+        bottomB = b->y + b->h;
+
+        //If any of the sides from A are outside of B
+        if(bottomA > bottomB || topA < topB || rightA > rightB || leftA < leftB){
+            this->inBounds_ = false;
+            if(getBoundAction() == "StopOnCollide"){
+                setDeltaXPosition(0);
+            } //end if
+        } //end if
+        else{
+            this->inBounds_ = true;
+        } // end else
+    } //end if
 } // end checkBounds
 
 
 bool Sprite::collidesWith(Sprite* otherSprite){
-    SDL_Rect *a = this->getCollisionRect(); // rectangle A
-    SDL_Rect *b = otherSprite->getCollisionRect(); // rectangle B
+    if(isShowing() == true && otherSprite->isShowing() == true){
+        SDL_Rect *a = this->getCollisionRect(); // rectangle A
+        SDL_Rect *b = otherSprite->getCollisionRect(); // rectangle B
 
-    //The sides of the rectangles
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
+        //The sides of the rectangles
+        int leftA, leftB;
+        int rightA, rightB;
+        int topA, topB;
+        int bottomA, bottomB;
 
-    //Calculate the sides of rect A
-    leftA = a->x;
-    rightA = a->x + a->w;
-    topA = a->y;
-    bottomA = a->y + a->h;
+        //Calculate the sides of rect A
+        leftA = a->x;
+        rightA = a->x + a->w;
+        topA = a->y;
+        bottomA = a->y + a->h;
 
-    //Calculate the sides of rect B
-    leftB = b->x;
-    rightB = b->x + b->w;
-    topB = b->y;
-    bottomB = b->y + b->h;
+        //Calculate the sides of rect B
+        leftB = b->x;
+        rightB = b->x + b->w;
+        topB = b->y;
+        bottomB = b->y + b->h;
 
-    //If any of the sides from A are outside of B
-    if( bottomA < topB ){
-        return false;
+        //If any of the sides from A are outside of B
+        if( bottomA < topB ){
+            return false;
+        } //end if
+        if( topA > bottomB ){
+            return false;
+        } // end if
+        if( rightA < leftB ){
+            return false;
+        } // end if
+        if( leftA > rightB ){
+            return false;
+        } //end if
+
+        //If none of the sides from A are outside B
+        return true;
     } //end if
-    if( topA > bottomB ){
+    else{
         return false;
-    } // end if
-    if( rightA < leftB ){
-        return false;
-    } // end if
-    if( leftA > rightB ){
-        return false;
-    } //end if
-
-    //If none of the sides from A are outside B
-    return true;
+    } //end else
 } // end collidesWith
 
 int Sprite::distanceTo(Sprite*){
@@ -313,6 +376,6 @@ int Sprite::angleTo(Sprite *){
 
 
 void Sprite::vectorProject(){
-
+    //TODO
 } // end vectorProject
 

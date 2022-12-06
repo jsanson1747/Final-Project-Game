@@ -10,7 +10,7 @@
 
 
 class Sprite{
-    private:
+    public:
         SDL_Surface* image_;
         std::unordered_map<std::string, int>* size_;
         std::unordered_map<std::string, int>* position_;
@@ -23,6 +23,8 @@ class Sprite{
         std::string boundAction_; // what the sprite does when it detects a boundry
         SDL_Rect* imgRect_;
         SDL_Rect *collisionRect_;
+        bool isShowing_;
+        bool inBounds_;
 
         //internal helper method
         void vectorProject();
@@ -63,12 +65,14 @@ class Sprite{
         void setCollisionRect(SDL_Rect *);
 
         //methods
-        void draw();
-        virtual void update();
-        void hide();
-        void show();
+        void draw(void);
+        virtual void update(void) = 0;
+        void hide(void);
+        void show(void);
+        bool isShowing(void);
         void addForce(std::string, int);
-        void checkBounds();
+        bool inBounds(void);
+        void checkBounds(void);
         bool collidesWith(Sprite*);
         int distanceTo(Sprite*);
         int angleTo(Sprite *);

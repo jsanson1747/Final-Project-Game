@@ -9,11 +9,16 @@ Scene::Scene(){
     //position_ = new std::unordered_map<std::string, int>;
     this->sprites_ = new std::vector<Sprite*>;
     this->keyStates_ = new std::list<bool>;
+    this->boundsRect_ = new SDL_Rect;
 
     //  initialize map and set default size;
-    this->size_->insert({"width", 800});
-    this->size_->insert({"height", 800});
-    
+    this->size_->insert({"width", 1088});
+    this->size_->insert({"height", 736});
+    this->boundsRect_->w = size_->at("width");
+    this->boundsRect_->h = size_->at("height");
+    this->boundsRect_->x = 0;
+    this->boundsRect_->y = 0;
+
     // initialize map and set default background color
     this->backgroundColor_->insert({"red", 255});
     this->backgroundColor_->insert({"green", 255});
@@ -114,6 +119,13 @@ void Scene::setSize(int width, int height){
     this->size_->at("height") = height;
 } // end setSize
 
+SDL_Rect* Scene::getBoundsRect(){
+    return this->boundsRect_;
+} //end getBoundsRect
+
+void Scene::setBoundsRect(SDL_Rect* rect){
+    this->boundsRect_ = rect;
+} //end setBoundsRect
 
 //std::unordered_map<std::string, int>* Scene::getPosition(void){
 //
@@ -178,17 +190,17 @@ void Scene::addSprite(Sprite* sprite){
 } // end addSprite
 
 void Scene::start(){
-
+    //TODO
 } // end start
 
 
 void Scene::end(){
-    
+    //TODO
 } // end end
 
 
 void Scene::pause(){
-
+    //TODO
 } // end pause
 
 
@@ -209,27 +221,27 @@ void Scene::refresh(){
 
 
 void Scene::hideCursor(){
-
+    //TODO
 } // end hideCursor
 
 
 void Scene::showCursor(){
-
+    //TODO
 } // end showCursor
 
 
 void Scene::getMousePos(){
-
+    //TODO
 } // end getMousePos()
 
 
 void Scene::hide(){
-
+    this->isShowing_ = false;
 } // end hide
 
 
 void Scene::show(){
-
+    this->isShowing_ = true;
 } // end show
 
 void Scene::quit(void){
