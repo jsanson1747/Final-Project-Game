@@ -32,7 +32,10 @@
         "unordered_map": "cpp",
         "tuple": "cpp",
         "utility": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "map": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/SDL2-2.24.0/test"
 }

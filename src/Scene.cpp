@@ -8,7 +8,8 @@ Scene::Scene(){
     //initialize data structures
     this->size_ = new std::unordered_map<std::string, int>;
     this->backgroundColor_ = new std::unordered_map<std::string, int>;
-    //position_ = new std::unordered_map<std::string, int>;
+    this->position_ = new std::unordered_map<std::string, int>;
+    this->deltaPosition_ = new std::unordered_map<std::string, int>;
     this->sprites_ = new std::vector<Sprite*>;
     this->keyStates_ = new std::list<bool>;
     this->boundsRect_ = new SDL_Rect;
@@ -20,6 +21,14 @@ Scene::Scene(){
     this->boundsRect_->h = size_->at("height");
     this->boundsRect_->x = 0;
     this->boundsRect_->y = 0;
+
+    // initialize map/scene position
+    this->position_->insert({"xPos", 0});
+    this->position_->insert({"yPos", 0});
+
+    // initialize map and set default deltaPosition;
+    this->deltaPosition_->insert({"dx", 0});
+    this->deltaPosition_->insert({"dy", 0});
 
     // initialize map and set default background color
     this->backgroundColor_->insert({"red", 255});
@@ -118,16 +127,37 @@ void Scene::setBoundsRect(SDL_Rect* rect){
     this->boundsRect_ = rect;
 } //end setBoundsRect
 
-//std::unordered_map<std::string, int>* Scene::getPosition(void){
-//
-//} // end getPosition
+std::unordered_map<std::string, int>* Scene::getPosition(void){
+    return this->position_;
+} // end getPosition
 
 
-//void Scene::setPosition(int xPos, int yPos){
-//    size_->at({"xPos", xPos});
-//    size_->at({"yPos", yPos});
-//} // end setPosition
+void Scene::setPosition(int xPos, int yPos){
+    this->position_->at("xPos") = xPos;
+    this->position_->at("yPos") = yPos;
+    this->boundsRect_->x = xPos;
+    this->boundsRect_->y = yPos;
+} // end setPosition
 
+std::unordered_map<std::string, int>* Scene::getDeltaPosition(void){
+    return (this->deltaPosition_);
+} // end getDeltaPosition
+
+
+void Scene::setDeltaPosition(int dx, int dy){
+    this->deltaPosition_->at("dx") = dx;
+    this->deltaPosition_->at("dy") = dy;
+} // end setDeltaPosition
+
+
+void Scene::setDeltaXPosition(int dx){
+    this->deltaPosition_->at("dx") = dx;
+} // end setDeltaXPosition
+
+
+void Scene::setDeltaYPosition(int dy){
+    this->deltaPosition_->at("dy") = dy;
+} // end setDeltaYPosition
 
 std::vector<Sprite*>* Scene::getSprites(void){
     return (sprites_);
@@ -164,6 +194,16 @@ bool Scene::getMouseClickState(void){
 } // end getMouseClickState
 
 
+MapManager* Scene::getMapManager(void){
+    return this->MM_;
+} //end getMapManager
+
+
+void Scene::setMapManager(MapManager* MM){
+    this->MM_ = MM;
+} //end setMapManager
+
+
 void Scene::initializeGraphics(void){
     // initialize graphics engine
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -175,6 +215,15 @@ void Scene::initializeGraphics(void){
     Scene::renderer = renderer;
     setWindow(window);
 } // end initializeGraphics
+
+void Scene::addForce(std::string direction, int magnitude){
+    if(direction == "right"){
+        setDeltaXPosition(magnitude * -1);
+    } //end if
+    if(direction == "left"){
+        setDeltaXPosition(magnitude);
+    } //end if
+} // end addForce
 
 void Scene::addSprite(Sprite* sprite){
     getSprites()->emplace_back(sprite);

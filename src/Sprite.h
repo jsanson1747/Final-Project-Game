@@ -6,8 +6,10 @@
 #include <SDL2/SDL.h>
 #include <unordered_map>
 #include <string>
+#include <cmath>
 #include "Scene.h"
 
+class Scene;
 
 class Sprite{
     public:
@@ -74,6 +76,7 @@ class Sprite{
         bool inBounds(void);
         void checkBounds(void);
         bool collidesWith(Sprite*);
+        bool onGround(void);
         int distanceTo(Sprite*);
         int angleTo(Sprite *);
         void setDeltaXPosition(int);

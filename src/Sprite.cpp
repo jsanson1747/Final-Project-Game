@@ -308,7 +308,8 @@ void Sprite::checkBounds(){
             } //end if
             if(getBoundAction() == "respawn"){
                 if(bottomA > bottomB){
-                    setPosition(50, 50);
+                    setPosition(368, 50);
+                    getScene()->setPosition(0, 0);
                     setDeltaPosition(0, 0);
                 } //end if
             } //end if
@@ -364,6 +365,21 @@ bool Sprite::collidesWith(Sprite* otherSprite){
         return false;
     } //end else
 } // end collidesWith
+
+bool Sprite::onGround(){
+    std::vector<std::vector<int>> *mapVector = getScene()->getMapManager()->getMapVector();
+    
+    int xIndex = (std::abs(getScene()->getPosition()->at("xPos")) + getPosition()->at("xPos")) / 32;
+    int yIndex = getPosition()->at("yPos") / 32 + 3;
+    std::cout << xIndex << " " << yIndex << " " << std::endl;
+    if(mapVector->at(yIndex).at(xIndex) != 0){
+        std::cout << "on floor" << std::endl;
+        return true;
+    } //end if
+    else{
+        return false;
+    } //end else
+} //end onGround
 
 int Sprite::distanceTo(Sprite*){
     return 0;

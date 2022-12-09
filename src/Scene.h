@@ -9,8 +9,10 @@
 #include <list>
 #include <vector>
 #include "SDL_image.h"
+#include "MapManager.h"
 
 class Sprite;
+class MapManager;
 
 class Scene{
     private:
@@ -20,12 +22,14 @@ class Scene{
         std::unordered_map<std::string, int>* backgroundColor_;
         std::unordered_map<std::string, int>* size_;
         SDL_Rect* boundsRect_;
-        //std::unordered_map<std::string, int>* position_;
+        std::unordered_map<std::string, int>* position_;
+        std::unordered_map<std::string, int>* deltaPosition_; // change in position
         std::vector<Sprite*>* sprites_;
         int frameRate_;
         std::list<bool>* keyStates_;
         bool mouseButtonState_;
         bool isShowing_;
+        MapManager* MM_;
 
     public:
         // static member variable
@@ -51,8 +55,15 @@ class Scene{
         void setSize(int height, int width);
         SDL_Rect* getBoundsRect();
         void setBoundsRect(SDL_Rect*);
-        //std::unordered_map<std::string, int>* getPosition(void);
-        //void setPosition(int xPos, int yPos);
+        std::unordered_map<std::string, int>* getPosition(void);
+        void setPosition(int xPos, int yPos);
+
+        std::unordered_map<std::string, int>* getDeltaPosition(void);
+        void setDeltaPosition(int dx, int dy);
+        void setDeltaXPosition(int dx);
+        void setDeltaYPosition(int dy);
+        void addForce(std::string direction, int magnitude);
+
         std::vector<Sprite*>* getSprites(void);
         void setSprites(std::vector<Sprite*>*);
         int getFrameRate(void);
@@ -60,6 +71,8 @@ class Scene{
         std::list<bool>* getKeyStates(void);
         void setKeyStates(std::list<bool>*);
         bool getMouseClickState(void);
+        MapManager* getMapManager(void);
+        void setMapManager(MapManager*);
 
         // Methods
         void initializeGraphics();
