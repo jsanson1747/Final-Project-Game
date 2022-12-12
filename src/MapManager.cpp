@@ -127,7 +127,7 @@ void MapManager::drawMap(void){
                     texture = SDL_CreateTextureFromSurface(Scene::renderer, surface);
                     SDL_RenderCopy(Scene::renderer, texture, &surface->clip_rect, dest);
                     dest->x += getTileSize();
-                }
+                } //end if
             } //end if
             counter++;
         } //end for
@@ -135,6 +135,7 @@ void MapManager::drawMap(void){
     } // end for
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
+    delete dest;
 } //end drawMap
 
 
