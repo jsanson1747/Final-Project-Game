@@ -4,7 +4,7 @@
 My game utilizes the C++ graphics libraries SDL2 and SDL_Image. I used my custom game engine as the base and expanded it to meet my game's needs.  
 
 ## Launching the game
-In orrder to launch the game, close this repository into your personal machine. Then open the folder in VS-Code. Once in VS-Code, run the program and it will automatically use the configuration filed from the .vscode folder to build and run the game.
+In order to launch the game, clone this repository onto your personal machine. Then open the folder in Visual Studio Code. Once in Visual Studio Code, run the program and it will automatically use the configuration files from the .vscode folder to build and run the game.
 
 ## Game Structure
 ![UML drawio](https://user-images.githubusercontent.com/107002749/207442877-0d26def3-8400-4c55-b436-0438720ba0da.png)
