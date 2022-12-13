@@ -48,7 +48,10 @@ std::vector<std::vector<int>>* MapManager::getMapVector(void){
 } //end getMapVector
 
 void MapManager::loadMap(void){
+    SDL_Surface* surface;
+    SDL_Texture* texture;
     this->imgVector_ = new std::vector<std::string>;
+    this->textureVector_ = new std::vector<SDL_Texture*>;
     std::string completeFilePath = "";
     std::vector<int>* innerVector= new std::vector<int>;
     this->mapVector_ = parseTMX(getMapFile());
@@ -58,8 +61,14 @@ void MapManager::loadMap(void){
             completeFilePath = "";
             completeFilePath += getTileFilePrefix() + std::to_string(innerVector->at(col)) + ".png";
             this->imgVector_->push_back(completeFilePath);
+            surface = IMG_Load(completeFilePath.c_str());
+            texture = SDL_CreateTextureFromSurface(Scene::renderer, surface);
+            this->textureVector_->push_back(texture);
         } // end for
     } // end for
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
+
 } // end loadMap
 
 std::vector<std::vector<int>>* MapManager::parseTMX(const char* file){
@@ -111,8 +120,6 @@ std::vector<std::vector<int>>* MapManager::parseTMX(const char* file){
 void MapManager::drawMap(void){
     Sprite* player = getScene()->getSprites()->at(0);
     SDL_Rect* dest = new SDL_Rect();
-    SDL_Surface *surface;
-    SDL_Texture *texture;
     dest->x = getScene()->getPosition()->at("xPos");
     dest->y = 0;
     dest->w = this->getTileSize();
@@ -123,9 +130,7 @@ void MapManager::drawMap(void){
         for (int index = 0; index < numCols_; index++){
             if(this->imgVector_->at(counter).c_str() != 0){
                 if(inBounds(dest)){
-                    surface = IMG_Load(this->imgVector_->at(counter).c_str());
-                    texture = SDL_CreateTextureFromSurface(Scene::renderer, surface);
-                    SDL_RenderCopy(Scene::renderer, texture, &surface->clip_rect, dest);
+                    SDL_RenderCopy(Scene::renderer, this->textureVector_->at(counter), NULL, dest);
                     dest->x += getTileSize();
                 } //end if
             } //end if
@@ -133,8 +138,6 @@ void MapManager::drawMap(void){
         } //end for
         dest->y += getTileSize();
     } // end for
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(texture);
     delete dest;
 } //end drawMap
 

@@ -21,7 +21,8 @@ class MapManager{
         Scene* scene_;
         const char* mapFile_;
         std::vector<std::vector<int>>* mapVector_;
-        std::vector<std::string> *imgVector_;
+        std::vector<std::string>* imgVector_;
+        std::vector<SDL_Texture*>* textureVector_;
         int numCols_;
         int numRows_;
         std::vector<std::vector<int>>* parseTMX(const char*);
