@@ -369,7 +369,7 @@ bool Sprite::collidesWith(Sprite* otherSprite){
 bool Sprite::onGround(){
     std::vector<std::vector<int>> *mapVector = getScene()->getMapManager()->getMapVector();
     
-    int xIndex = (std::abs(getScene()->getPosition()->at("xPos")) + getPosition()->at("xPos")) / 32;
+    int xIndex = (std::abs(getScene()->getPosition()->at("xPos")) + getPosition()->at("xPos") + 16) / 32 + 1;
     int yIndex = getPosition()->at("yPos") / 32 + 3;
     std::cout << xIndex << " " << yIndex << " " << std::endl;
     if(mapVector->at(yIndex).at(xIndex) != 0){
