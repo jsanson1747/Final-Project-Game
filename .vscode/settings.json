@@ -35,7 +35,8 @@
         "vector": "cpp",
         "map": "cpp",
         "fstream": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "sdl_image.h": "c"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/SDL2-2.24.0/test"
 }

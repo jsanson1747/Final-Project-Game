@@ -24,7 +24,7 @@
                     "text": "set charset UTF-8"
                 }
             ],
-            "preLaunchTask": "SDL2"
+            "preLaunchTask": "Compile"
         }
     ]
 }
